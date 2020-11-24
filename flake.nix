@@ -13,16 +13,26 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, ... }@inputs:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-        inherit (pkgs) mkShell;
-      in {
-        devShell = mkShell {
-          buildInputs = with pkgs; [
-            # Make sure we have a fresh nix
-            nixUnstable
-          ];
-        };
-      });
+    let
+      inherit (nixpkgs.lib) recursiveUpdate foldl' nixosSystem;
+    in foldl' recursiveUpdate {} [
+      # System-dependent outputs
+      (flake-utils.lib.eachDefaultSystem (system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          inherit (pkgs) mkShell;
+        in {
+          devShell = mkShell {
+            buildInputs = with pkgs; [
+              # Make sure we have a fresh nix
+              nixUnstable
+            ];
+          };
+        }))
+
+      # System-independent outputs
+      {
+        module = import ./nixos/modules/services/games/minecraft-servers;
+      }
+    ];
 }

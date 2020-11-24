@@ -1,0 +1,13 @@
+backups
+eula.txt
+tmp
+logs
+rsync.log
+resourcepacks
+shaderpacks
+mods/OptiFine*
+mods/TipTheScales*
+mods/hiddenarmor*
+saves
+world
+journeymap
