@@ -9,10 +9,16 @@ let
   serverPropertiesFile = serverConfig: pkgs.writeText "server.properties"
     (mkOptionText serverConfig);
 
-  escapeOptionValue = value:
-    if builtins.typeOf value == "string"
-    then escape [":" "=" "'"] value
-    else toString value;
+
+  encodeOptionValue = value: let
+    encodeBool = value: if value then "true" else "false";
+    encodeString = value: escape [":" "=" "'"] value;
+    typeMap = {
+      "bool" = encodeBool;
+      "string" = encodeString;
+    };
+  in
+    (typeMap.${builtins.typeOf value} or toString) value;
 
   mkOptionLine = name: value:
     let
@@ -22,7 +28,7 @@ let
         then stringAsChars (x: if x == "-" then "." else x) name
         else name;
     in
-    "${fixName name}=${escapeOptionValue value}";
+    "${fixName name}=${encodeOptionValue value}";
 
   mkOptionText = serverConfig:
   let
