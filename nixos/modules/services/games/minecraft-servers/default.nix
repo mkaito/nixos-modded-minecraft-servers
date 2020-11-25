@@ -82,13 +82,27 @@ in {
     # Attrset options
     eachEnabledInstance = f: mapAttrs' (i: c: nameValuePair (mkInstanceName i) (f i c) ) enabledInstances;
 
-    # List options
-    eachEnabledInstance' = f: flatten (mapAttrsToList f enabledInstances);
+    serverPorts = mapAttrsToList (_: v: v.serverConfig.server-port) enabledInstances;
+    rconPorts = mapAttrsToList
+      (_: v: v.serverConfig.rcon-port)
+        (filterAttrs (_: x: x.serverConfig.enable-rcon) enabledInstances);
+    queryPorts = mapAttrsToList
+      (_: v: v.serverConfig.query-port)
+        (filterAttrs (_: x: x.serverConfig.enable-query) enabledInstances);
 
   in {
     assertions = [
       { assertion = cfg.eula;
         message = "You must accept the Mojang EULA in order to run any servers."; }
+
+      { assertion = (unique serverPorts) == serverPorts;
+        message = "Your Minecraft instances have overlapping server ports. They must be unique."; }
+
+      { assertion = (unique rconPorts) == rconPorts;
+        message = "Your Minecraft instances have overlapping RCON ports. They must be unique."; }
+
+      { assertion = (unique queryPorts) == queryPorts;
+        message = "Your Minecraft instances have overlapping query ports. They must be unique."; }
     ];
 
     systemd.services = eachEnabledInstance (name: icfg: {
@@ -139,13 +153,7 @@ in {
             map (x: rsyncCmd + " " + x) icfg.rsyncSSHKeys;
       });
 
-    networking.firewall.allowedUDPPorts = eachEnabledInstance'
-      (_: icfg: optionals icfg.serverConfig.enable-query [icfg.serverConfig.query-port]);
-
-    networking.firewall.allowedTCPPorts = eachEnabledInstance'
-      (_: icfg: [ icfg.serverConfig.server-port ]
-            ++ (optionals icfg.serverConfig.enable-query [icfg.serverConfig.query-port])
-            ++ (optionals icfg.serverConfig.enable-rcon  [icfg.serverConfig.rcon-port]));
-
+    networking.firewall.allowedUDPPorts = queryPorts;
+    networking.firewall.allowedTCPPorts = serverPorts ++ queryPorts ++ rconPorts;
   };
 }
