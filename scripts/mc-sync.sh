@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2029
+
 set -euo pipefail
 ROOT="$(dirname "$(realpath "$0")")"
 
@@ -30,12 +32,13 @@ if [[ -z ${4:-} ]]; then
     RSYNCOPTS+=(--exclude-from="$ROOT"/rsyncignore)
 fi
 
+ssh "$THOST" sudo systemctl stop "$TUSER"
+
 taction="${3:-push}"
 if [[ $taction == push ]]; then
     rsync "${RSYNCOPTS[@]}" ./ "${TUSER}@${THOST}${TPATH}"
-
-    # shellcheck disable=SC2029
-    ssh "$THOST" sudo systemctl restart "$TUSER"
 elif [[ $taction == pull ]]; then
     rsync "${RSYNCOPTS[@]}" "${TUSER}@${THOST}${TPATH}" ./
 fi
+
+ssh "$THOST" sudo systemctl start "$TUSER"
