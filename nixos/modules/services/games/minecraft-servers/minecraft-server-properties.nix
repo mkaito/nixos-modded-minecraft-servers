@@ -248,7 +248,7 @@ with lib;
       '';
     };
     max-tick-time = mkOption {
-      type = with types; ints.unsigned;
+      type = with types; int;
       default = 60000;
       description = ''
         The maximum number of milliseconds a single tick may take before
