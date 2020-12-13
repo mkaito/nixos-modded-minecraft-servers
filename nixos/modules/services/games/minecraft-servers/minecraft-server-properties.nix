@@ -206,7 +206,7 @@ with lib;
       '';
     };
     level-type = mkOption {
-      type = with types; enum ["default" "flat" "largeBiomes" "amplified" "buffet"];
+      type = with types; str;
       default = "default";
       description = ''
         Determines the type of map that is generated.
