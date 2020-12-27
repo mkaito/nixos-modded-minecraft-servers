@@ -49,8 +49,8 @@ with lib;
       '';
     };
     difficulty = mkOption {
-      type = with types; enum ["peaceful" "easy" "normal" "hard"];
-      default = "easy";
+      type = with types; ints.between 0 3;
+      default = 1;
       description = ''
         Defines the difficulty (such as damage dealt by mobs and the way
         hunger and poison affects players) of the server.
@@ -145,8 +145,8 @@ with lib;
       '';
     };
     gamemode = mkOption {
-      type = with types; enum ["survival" "creative" "adventure" "spectator"];
-      default = "survival";
+      type = with types; ints.between 0 3;
+      default = 0;
       description = ''
         Defines the mode of gameplay.
       '';
