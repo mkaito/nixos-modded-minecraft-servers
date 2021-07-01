@@ -47,6 +47,9 @@ In your server config:
 }
 ```
 
+For a more elaborate example, you can have a look at [my actual server
+configuration](https://github.com/mkaito/nixos-configurations/blob/master/stargazer/minecraft-servers.nix).
+
 ### Server configuration
 
 Server configuration is done by setting options under the `serverConfig` attribute.
