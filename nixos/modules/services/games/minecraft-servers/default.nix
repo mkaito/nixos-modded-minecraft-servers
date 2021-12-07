@@ -147,11 +147,14 @@ in {
         isSystemUser = true;
         useDefaultShell = true;
         createHome = true;
+        group = mkInstanceName name;
         home = "/var/lib/${mkInstanceName name}";
         openssh.authorizedKeys.keys =
           optionals (icfg.rsyncSSHKeys != [])
             map (x: rsyncCmd + " " + x) icfg.rsyncSSHKeys;
       });
+
+    users.groups = eachEnabledInstance (_: _: {});
 
     networking.firewall.allowedUDPPorts = queryPorts;
     networking.firewall.allowedTCPPorts = serverPorts ++ queryPorts ++ rconPorts;
