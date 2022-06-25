@@ -11,6 +11,11 @@ ROOT="$(dirname "$(realpath "$0")")"
 #  Usage: mc-sync.sh <instance> <server> <push|pull> [--full]
 #   mc-sync.sh mc-e2es stargazer.mkaito.net push --full
 
+if [[ ! -f start.sh ]]; then
+  echo 'Could not find start.sh in current folder. Aborging.'
+  exit 1
+fi
+
 if [[ -n ${1:-} ]]; then
     TUSER="$1"
     TPATH="::$1/"
