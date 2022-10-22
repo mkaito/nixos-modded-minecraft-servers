@@ -24,23 +24,25 @@ In your server config:
     # This is mandatory, sorry.
     eula = true;
 
-    # The name will be used for the state folder and system user.
-    # In this case, the folder is `/var/lib/mc-e2es`
-    # and the user `mc-e2es`.
-    e2es = {
-      enable = true;
+    instances = {
+      # The name will be used for the state folder and system user.
+      # In this case, the folder is `/var/lib/mc-e2es`
+      # and the user `mc-e2es`.
+      e2es = {
+        enable = true;
 
-      # Keys that can access the state of this instance (read/write!) over an rsync module
-      # Leave empty to disable
-      rsyncSSHKeys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGguJRLNBsQJ80dEemxeUjBcpF5N7iylGLW4ZMP0eSP8"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBim0Y5S0CXBsRWQsYbEVMrjXUe3l5lLp2gBiZ5mWMO0"
-      ];
+        # Keys that can access the state of this instance (read/write!) over an rsync module
+        # Leave empty to disable
+        rsyncSSHKeys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGguJRLNBsQJ80dEemxeUjBcpF5N7iylGLW4ZMP0eSP8"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBim0Y5S0CXBsRWQsYbEVMrjXUe3l5lLp2gBiZ5mWMO0"
+        ];
 
-      serverConfig = {
-        # Port must be unique
-        server-port = 25566;
-        motd = "Welcome to Enigmatica 2: Expert Skyblock";
+        serverConfig = {
+          # Port must be unique
+          server-port = 25566;
+          motd = "Welcome to Enigmatica 2: Expert Skyblock";
+        };
       };
     };
   };
