@@ -1,6 +1,9 @@
-{ lib, ... }:
-with lib;
 {
+  lib,
+  config,
+  ...
+}:
+with lib; {
   options = {
     allow-flight = mkOption {
       type = with types; bool;
@@ -81,9 +84,14 @@ with lib;
     };
     enable-rcon = mkOption {
       type = with types; bool;
-      default = false;
+      default = true;
       description = ''
-        Enables remote access to the server console.
+        Enables remote access to the server console. Must be enabled for systemd
+        to be able to safely shut down the server.
+
+        Note: By default, rcon is enabled, and its port is set to <literal>server-port+1</literal>.
+        However, the rcon port does not get opened in the firewall by default,
+        meaning it can only be accessed from localhost.
       '';
     };
     sync-chunk-writes = mkOption {
@@ -481,15 +489,25 @@ with lib;
         Sets the password for RCON: a remote console protocol that can
         allow other applications to connect and interact with a Minecraft
         server over the internet.
+
+        If you set this, you must also set $MCRCON_PASS environment variable for the corresponding systemd unit.
+
+        Note: By default, rcon is enabled, and its port is set to <literal>server-port+1</literal>.
+        However, the rcon port does not get opened in the firewall by default,
+        meaning it can only be accessed from localhost.
       '';
     };
     rcon-port = mkOption {
       type = with types; port;
-      default = 25575;
+      default = config.server-port + 1;
       description = ''
         Minecraft: <literal>rcon.port</literal>.
 
         Sets the RCON network port.
+
+        Note: By default, rcon is enabled, and its port is set to <literal>server-port+1</literal>.
+        However, the rcon port does not get opened in the firewall by default,
+        meaning it can only be accessed from localhost.
       '';
     };
     resource-pack = mkOption {
@@ -653,6 +671,5 @@ with lib;
         escaped, but property names will not.
       '';
     };
-
   };
 }

@@ -1,10 +1,14 @@
-pkgs: {name, lib, config, ... }: with lib;
-let
+pkgs: {
+  name,
+  lib,
+  config,
+  ...
+}:
+with lib; let
   mkJvmMxFlag = icfg: optionalString (icfg.jvmMaxAllocation != "") "-Xmx${icfg.jvmMaxAllocation}";
   mkJvmMsFlag = icfg: optionalString (icfg.jvmInitialAllocation != "") "-Xms${icfg.jvmInitialAllocation}";
   mkJvmOptString = icfg: "${mkJvmMxFlag icfg} ${mkJvmMsFlag icfg} ${icfg.jvmOpts}";
-in
-{
+in {
   options = rec {
     enable = mkEnableOption "Enable minecraft server instance ${name}";
 
@@ -16,6 +20,51 @@ in
         scoped to the instance state directory.
 
         This rsync module can be used to manage the instance files.
+      '';
+    };
+
+    openRcon = mkOption {
+      type = with types; bool;
+      default = false;
+      description = ''
+        Whether to open the RCON port in the firewall. Local RCON is used for server automation. Public RCON requires additional security.
+      '';
+    };
+
+    autoRestartTimer = mkOption {
+      type = with types; int;
+      default = 0;
+      description = ''
+        Sets a wall timer in minutes to restart the server. How often this is
+        necessary depends on mods, population, and activity. 24h is a decent
+        default. Set to 0 to disable.
+
+        The restart action will start a 15 minute timer, sending a global
+        notification every 5 minutes to advise players about the restart. When
+        the timer elapses, the unit is restarted.
+      '';
+    };
+
+    autoRestartOpportunisticCheckTimer = mkOption {
+      type = with types; int;
+      default = 0;
+      description = ''
+        Opportunistically restart the server when nobody is online. Sets a wall
+        timer in minutes to check for currently online players. If two checks in
+        a row find nobody online, restart the server if it hasn't been restarted
+        within the last <literal>autoRestartOpportunisticMinInterval</literal>
+        minutes.
+      '';
+    };
+
+    autoRestartOpportunisticMinInterval = mkOption {
+      type = with types; int;
+      default = 0;
+      description = ''
+        Minimum online interval for opportunistic server restart. Do not
+        opportunistically restart the server unless at least this many minutes
+        have elapsed since the last server start. This is to avoid restarting
+        the server too often as people come and go.
       '';
     };
 
@@ -52,7 +101,6 @@ in
         Defaults to not being set.
       '';
     };
-
 
     jvmOpts = mkOption {
       type = with types; str;

@@ -32,7 +32,7 @@ else
 fi
 
 
-RSYNCOPTS=(-avzzpL -e ssh --delete)
+RSYNCOPTS=(-avzzpPL -e ssh --delete)
 if [[ -z ${4:-} ]]; then
     RSYNCOPTS+=(--exclude-from="$ROOT"/rsyncignore)
 fi
