@@ -89,9 +89,10 @@ with lib; {
         Enables remote access to the server console. Must be enabled for systemd
         to be able to safely shut down the server.
 
-        Note: By default, rcon is enabled, and its port is set to <literal>server-port+1</literal>.
-        However, the rcon port does not get opened in the firewall by default,
-        meaning it can only be accessed from localhost.
+        Note: By default, rcon is enabled, and its port is set to
+        <literal>server-port+1</literal>.  However, the rcon port does not get
+        opened in the firewall by default, meaning it can only be accessed from
+        localhost.
       '';
     };
     sync-chunk-writes = mkOption {
@@ -482,7 +483,7 @@ with lib; {
     };
     rcon-password = mkOption {
       type = with types; str;
-      default = "";
+      default = "whatisloveohbabydonthurtmedonthurtmenomore";
       description = ''
         Minecraft: <literal>rcon.password</literal>.
 
@@ -490,11 +491,16 @@ with lib; {
         allow other applications to connect and interact with a Minecraft
         server over the internet.
 
-        If you set this, you must also set $MCRCON_PASS environment variable for the corresponding systemd unit.
+        A default password has been set because an empty password does not work
+        with mcrcon. This same default password is the default value of
+        <literal>$MCRCON_PASS</literal>. If you set this, you must also set
+        <literal>$MCRCON_PASS</literal> environment variable for the
+        corresponding systemd unit.
 
-        Note: By default, rcon is enabled, and its port is set to <literal>server-port+1</literal>.
-        However, the rcon port does not get opened in the firewall by default,
-        meaning it can only be accessed from localhost.
+        Note: By default, rcon is enabled, and its port is set to
+        <literal>server-port+1</literal>.  However, the rcon port does not get
+        opened in the firewall by default, meaning it can only be accessed from
+        localhost.
       '';
     };
     rcon-port = mkOption {
@@ -505,9 +511,10 @@ with lib; {
 
         Sets the RCON network port.
 
-        Note: By default, rcon is enabled, and its port is set to <literal>server-port+1</literal>.
-        However, the rcon port does not get opened in the firewall by default,
-        meaning it can only be accessed from localhost.
+        Note: By default, rcon is enabled, and its port is set to
+        <literal>server-port+1</literal>.  However, the rcon port does not get
+        opened in the firewall by default, meaning it can only be accessed from
+        localhost.
       '';
     };
     resource-pack = mkOption {

@@ -147,6 +147,7 @@ in {
       environment = {
         JVMOPTS = icfg.jvmOptString;
         MCRCON_PORT = toString icfg.serverConfig.server-port;
+        MCRCON_PASS = "whatisloveohbabydonthurtmedonthurtmenomore";
       };
 
       serviceConfig = let
