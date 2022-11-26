@@ -30,7 +30,8 @@ with lib; let
     fixName = name:
       if elem name dotNames
       then
-        stringAsChars (x:
+        stringAsChars
+        (x:
           if x == "-"
           then "."
           else x)
@@ -146,7 +147,7 @@ in {
 
       environment = {
         JVMOPTS = icfg.jvmOptString;
-        MCRCON_PORT = toString icfg.serverConfig.server-port;
+        MCRCON_PORT = toString icfg.serverConfig.rcon-port;
         MCRCON_PASS = "whatisloveohbabydonthurtmedonthurtmenomore";
       };
 
