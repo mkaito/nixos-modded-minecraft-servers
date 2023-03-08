@@ -24,23 +24,25 @@ In your server config:
     # This is mandatory, sorry.
     eula = true;
 
-    # The name will be used for the state folder and system user.
-    # In this case, the folder is `/var/lib/mc-e2es`
-    # and the user `mc-e2es`.
-    e2es = {
-      enable = true;
+    instances = {
+      # The name will be used for the state folder and system user.
+      # In this case, the folder is `/var/lib/mc-e2es`
+      # and the user `mc-e2es`.
+      e2es = {
+        enable = true;
 
-      # Keys that can access the state of this instance (read/write!) over an rsync module
-      # Leave empty to disable
-      rsyncSSHKeys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGguJRLNBsQJ80dEemxeUjBcpF5N7iylGLW4ZMP0eSP8"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBim0Y5S0CXBsRWQsYbEVMrjXUe3l5lLp2gBiZ5mWMO0"
-      ];
+        # Keys that can access the state of this instance (read/write!) over an rsync module
+        # Leave empty to disable
+        rsyncSSHKeys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGguJRLNBsQJ80dEemxeUjBcpF5N7iylGLW4ZMP0eSP8"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBim0Y5S0CXBsRWQsYbEVMrjXUe3l5lLp2gBiZ5mWMO0"
+        ];
 
-      serverConfig = {
-        # Port must be unique
-        server-port = 25566;
-        motd = "Welcome to Enigmatica 2: Expert Skyblock";
+        serverConfig = {
+          # Port must be unique
+          server-port = 25566;
+          motd = "Welcome to Enigmatica 2: Expert Skyblock";
+        };
       };
     };
   };
@@ -130,7 +132,7 @@ launch.
 A simple example:
 
 ```sh
-exec java -server "${JVMOPTS[@]}" -jar forge-1.12.2-14.23.5.2847-universal.jar nogui"
+exec java -server "${JVMOPTS[@]}" -jar forge-1.12.2-14.23.5.2847-universal.jar nogui
 ```
 
 Depending on what exactly the modpack uses to launch, you may or may not be able
@@ -140,8 +142,14 @@ flags manually in whatever format they use.
 #### Rsync module
 
 If you set `rsyncSSHKeys`, an rsync module will be available at
-`ssh://mc-${name}@yourserver:${name}`. This rsync module has
+`ssh://mc-${name}@yourserver::mc-${name}`. This rsync module has
 read/write access, so you should only allow people that you trust.
+
+Example usage:
+
+```sh
+rsync -av Enigmatica2ExpertServer/ --rsh=ssh mc-e2e@hostname::mc-e2e
+```
 
 The SSH keys defined here will all have a forced command that invokes rsync with
 a specific configuration, defining only a single module with access to the
