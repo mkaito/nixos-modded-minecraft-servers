@@ -109,7 +109,7 @@ in {
   in {
     assertions = [
       {
-        assertion = (builtins.length enabledInstances) > 0 -> cfg.eula;
+        assertion = (builtins.length (builtins.attrNames enabledInstances)) > 0 -> cfg.eula;
         message = "You must accept the Mojang EULA in order to run any servers.";
       }
 
